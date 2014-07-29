@@ -62,4 +62,22 @@
     }
 }
 
+- (BOOL)isEqual:(id)object
+{
+    if ([super isEqual:object])
+        return YES;
+
+    if (![object isMemberOfClass:self.class])
+        return NO;
+
+    THContact *contact = (THContact *)object;
+
+    if ([self.fullName isEqualToString:contact.fullName] &&
+        [self.phone isEqualToString:contact.phone]) {
+        return YES;
+    }
+
+    return NO;
+}
+
 @end

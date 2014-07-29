@@ -10,4 +10,11 @@
 
 @interface THContactPickerTableViewCell : UITableViewCell
 
+@property (weak, nonatomic) IBOutlet UILabel *name;
+@property (weak, nonatomic) IBOutlet UILabel *phone;
+@property (weak, nonatomic) IBOutlet UILabel *phoneLabel;
+
+@property (weak, nonatomic) IBOutlet UIImageView *avatar;
+@property (weak, nonatomic) IBOutlet UIImageView *checkbox;
+
 @end

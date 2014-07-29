@@ -14,12 +14,13 @@
 - (NSString *)fullName;
 
 @property (nonatomic, assign) NSInteger recordId;
-@property (nonatomic, strong) NSString *firstName;
-@property (nonatomic, strong) NSString *lastName;
-@property (nonatomic, assign) NSString *phone;
-@property (nonatomic, strong) NSString *email;
+@property (nonatomic, copy) NSString *firstName;
+@property (nonatomic, copy) NSString *lastName;
+@property (nonatomic, copy) NSString *phone;
+@property (nonatomic, copy) NSString *phoneLabel;
+@property (nonatomic, copy) NSString *email;
 @property (nonatomic, strong) UIImage *image;
-@property (nonatomic, assign, getter = isSelected) BOOL selected;
+@property (nonatomic, getter = isSelected) BOOL selected;
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSDate *dateUpdated;
 
