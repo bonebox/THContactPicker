@@ -43,7 +43,7 @@ UIBarButtonItem *barButton;
     //    UIBarButtonItem * barButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonItemStyleBordered target:self action:@selector(removeAllContacts:)];
     
     barButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(done:)];
-    barButton.enabled = FALSE;
+    barButton.enabled = self.selectedContacts.count > 0 ? YES : NO;
 
     self.title = [NSString stringWithFormat:@"%@ (%lu)", self.navTitle ?: @"Select Contacts", (unsigned long)self.selectedContacts.count];
 
