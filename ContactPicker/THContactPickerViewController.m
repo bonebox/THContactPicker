@@ -10,13 +10,13 @@
 #import <AddressBook/AddressBook.h>
 #import "THContact.h"
 
-UIBarButtonItem *barButton;
 
 @interface THContactPickerViewController ()
 
 @property (nonatomic, strong) NSArray *contacts;
 @property (nonatomic, strong) NSArray *filteredContacts;
-@property (nonatomic, assign) ABAddressBookRef addressBookRef;
+@property (nonatomic) ABAddressBookRef addressBookRef;
+@property (nonatomic, strong) UIBarButtonItem *barButton;
 
 @end
 
@@ -24,6 +24,15 @@ UIBarButtonItem *barButton;
 #define kKeyboardHeight 0.0
 
 @implementation THContactPickerViewController
+
+- (id)initWithPresentationStyle:(THContactPickerViewControllerPresentationStyle)presentationStyle
+{
+    self = [super init];
+    if (self) {
+        _presentationStyle = presentationStyle;
+    }
+    return self;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,14 +50,18 @@ UIBarButtonItem *barButton;
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     //    UIBarButtonItem * barButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonItemStyleBordered target:self action:@selector(removeAllContacts:)];
-    
-    barButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(done:)];
-    barButton.enabled = self.selectedContacts.count > 0 ? YES : NO;
+
+    self.barButton = [[UIBarButtonItem alloc] initWithTitle:(self.buttonTitle ?: @"Done") style:UIBarButtonItemStyleDone target:self action:@selector(done:)];
+    self.barButton.enabled = self.selectedContacts.count > 0 ? YES : NO;
+
+    if (!self.buttonLocation || self.buttonLocation == THContactPickerViewControllerButtonLocationLeft) {
+        self.navigationItem.leftBarButtonItem = self.barButton;
+    } else if (self.buttonLocation == THContactPickerViewControllerButtonLocationRight) {
+        self.navigationItem.rightBarButtonItem = self.barButton;
+    }
 
     self.title = [NSString stringWithFormat:@"%@ (%lu)", self.navTitle ?: @"Select Contacts", (unsigned long)self.selectedContacts.count];
 
-    self.navigationItem.leftBarButtonItem = barButton;
-    
     // Initialize and add Contact Picker View
     self.contactPickerView = [[THContactPickerView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 100)];
     self.contactPickerView.delegate = self;
@@ -61,6 +74,8 @@ UIBarButtonItem *barButton;
     self.tableView.dataSource = self;
     
     [self.tableView registerNib:[UINib nibWithNibName:@"THContactPickerTableViewCell" bundle:nil] forCellReuseIdentifier:@"ContactCell"];
+
+    self.tableView.translatesAutoresizingMaskIntoConstraints = YES;
     
     [self.view insertSubview:self.tableView belowSubview:self.contactPickerView];
     
@@ -353,11 +368,11 @@ UIBarButtonItem *barButton;
     
     // Enable Done button if total selected contacts > 0
     if(self.selectedContacts.count > 0) {
-        barButton.enabled = TRUE;
+        self.barButton.enabled = TRUE;
     }
     else
     {
-        barButton.enabled = FALSE;
+        self.barButton.enabled = FALSE;
     }
     
     // Update window title
@@ -398,11 +413,11 @@ UIBarButtonItem *barButton;
     
     // Enable Done button if total selected contacts > 0
     if(self.selectedContacts.count > 0) {
-        barButton.enabled = TRUE;
+        self.barButton.enabled = TRUE;
     }
     else
     {
-        barButton.enabled = FALSE;
+        self.barButton.enabled = FALSE;
     }
     
     // Set unchecked image
@@ -441,14 +456,19 @@ UIBarButtonItem *barButton;
     [self.navigationController pushViewController:view animated:YES];
 }
 
-- (void)done:(id)sender
+- (IBAction)done:(id)sender
 {
-    __weak __typeof(&*self) weakSelf = self;
-    [self.navigationController dismissViewControllerAnimated:YES completion:^{
-        if ([weakSelf.delegate respondsToSelector:@selector(THContactPickerViewController:didDismissWithSelectedContacts:)]) {
-            [weakSelf.delegate performSelector:@selector(THContactPickerViewController:didDismissWithSelectedContacts:) withObject:weakSelf withObject:weakSelf.selectedContacts];
-        }
-    }];
+    if (self.didTapDone)
+        self.didTapDone(self.selectedContacts);
+
+    if (self.presentationStyle == THContactPickerViewControllerPresentationStyleModal) {
+        __weak __typeof(&*self) weakSelf = self;
+        [self.navigationController dismissViewControllerAnimated:YES completion:^{
+            if ([weakSelf.delegate respondsToSelector:@selector(THContactPickerViewController:didDismissWithSelectedContacts:)]) {
+                [weakSelf.delegate performSelector:@selector(THContactPickerViewController:didDismissWithSelectedContacts:) withObject:weakSelf withObject:weakSelf.selectedContacts];
+            }
+        }];
+    }
 }
 
 @end
