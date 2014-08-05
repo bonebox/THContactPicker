@@ -72,11 +72,11 @@
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, self.contactPickerView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height - self.contactPickerView.frame.size.height - kKeyboardHeight) style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
+
     [self.tableView registerNib:[UINib nibWithNibName:@"THContactPickerTableViewCell" bundle:nil] forCellReuseIdentifier:@"ContactCell"];
 
-    self.tableView.translatesAutoresizingMaskIntoConstraints = YES;
-    
+//    self.tableView.translatesAutoresizingMaskIntoConstraints = YES;
+
     [self.view insertSubview:self.tableView belowSubview:self.contactPickerView];
     
     ABAddressBookRequestAccessWithCompletion(self.addressBookRef, ^(bool granted, CFErrorRef error) {
@@ -249,11 +249,14 @@
         [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
         
         self.tableView.frame = frame;
-        
+
+        self.tableView.contentInset = UIEdgeInsetsMake(self.topLayoutGuide.length, 0, 0, 0);
+
         [UIView commitAnimations];
     }
     else{
         self.tableView.frame = frame;
+        self.tableView.contentInset = UIEdgeInsetsMake(self.topLayoutGuide.length, 0, 0, 0);
     }
 }
 
