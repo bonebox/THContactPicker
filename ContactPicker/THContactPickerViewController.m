@@ -38,9 +38,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
-        CFErrorRef error;
-        _addressBookRef = ABAddressBookCreateWithOptions(NULL, &error);
+
     }
     return self;
 }
@@ -78,8 +76,10 @@
 //    self.tableView.translatesAutoresizingMaskIntoConstraints = YES;
 
     [self.view insertSubview:self.tableView belowSubview:self.contactPickerView];
-    
-    ABAddressBookRequestAccessWithCompletion(self.addressBookRef, ^(bool granted, CFErrorRef error) {
+
+    CFErrorRef error;
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &error);
+    ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
         if (granted) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self getContactsFromAddressBook];
@@ -97,8 +97,21 @@
     
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &error);
     if (addressBook) {
-        ABRecordRef source = ABAddressBookCopyDefaultSource(addressBook);
-        NSArray *allContacts = (__bridge_transfer NSArray *)ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(addressBook, source, kABPersonSortByLastName);
+        CFArrayRef people = (ABAddressBookCopyArrayOfAllPeople(addressBook));
+
+        CFMutableArrayRef peopleMutable = CFArrayCreateMutableCopy(kCFAllocatorDefault,
+                                                                   CFArrayGetCount(people),
+                                                                   people
+                                                                   );
+        CFRelease(people);
+        CFArraySortValues(
+                          peopleMutable,
+                          CFRangeMake(0, CFArrayGetCount(peopleMutable)),
+                          (CFComparatorFunction) ABPersonComparePeopleByName,
+                          (void*) ABPersonGetSortOrdering()
+                          );
+
+        NSArray *allContacts = [NSArray arrayWithArray:(__bridge NSArray *)(peopleMutable)];
 
         NSMutableArray *updatedContacts = [NSMutableArray array];
         NSMutableSet *linkedPeopleToSkip = [NSMutableSet set];
