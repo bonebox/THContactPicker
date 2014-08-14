@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSArray *filteredContacts;
 @property (nonatomic) ABAddressBookRef addressBookRef;
 @property (nonatomic, strong) UIBarButtonItem *barButton;
+@property (nonatomic) CGFloat keyboardHeight;
 
 @end
 
@@ -88,6 +89,23 @@
             // TODO: Show alert
         }
     });
+
+    self.keyboardHeight = 0;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)keyboardWillShow:(NSNotification *)notification
+{
+    NSDictionary *info = [notification userInfo];
+    self.keyboardHeight = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.height;
+    [self adjustTableViewFrame:YES];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification
+{
+    self.keyboardHeight = 0;
+    [self adjustTableViewFrame:NO];
 }
 
 -(void)getContactsFromAddressBook
@@ -253,7 +271,8 @@
     // This places the table view right under the text field
     frame.origin.y = self.contactPickerView.frame.size.height;
     // Calculate the remaining distance
-    frame.size.height = self.view.frame.size.height - self.contactPickerView.frame.size.height - kKeyboardHeight;
+
+    frame.size.height = self.view.frame.size.height - self.contactPickerView.frame.size.height - self.keyboardHeight;
     
     if(animated) {
         [UIView beginAnimations:nil context:nil];
