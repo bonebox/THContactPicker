@@ -126,7 +126,7 @@
                           peopleMutable,
                           CFRangeMake(0, CFArrayGetCount(peopleMutable)),
                           (CFComparatorFunction) ABPersonComparePeopleByName,
-                          (void*) ABPersonGetSortOrdering()
+                          (void*)(uintptr_t)ABPersonGetSortOrdering()
                           );
 
         NSArray *allContacts = [NSArray arrayWithArray:(__bridge NSArray *)(peopleMutable)];
