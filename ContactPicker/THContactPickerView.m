@@ -18,7 +18,6 @@
 @property (nonatomic, strong) NSMutableArray *contactKeys; // an ordered set of the keys placed in the contacts dictionary
 @property (nonatomic, strong) UILabel *placeholderLabel;
 @property (nonatomic, assign) CGFloat lineHeight;
-@property (nonatomic, strong) UITextView *textView;
 
 @property (nonatomic, strong) THBubbleColor *bubbleColor;
 @property (nonatomic, strong) THBubbleColor *bubbleSelectedColor;

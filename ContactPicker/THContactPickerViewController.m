@@ -39,7 +39,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-
     }
     return self;
 }
@@ -301,7 +300,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.filteredContacts.count;
+
+    return self.filteredContacts.count > 0 ? self.filteredContacts.count : 1;
 }
 
 - (CGFloat)tableView: (UITableView*)tableView heightForRowAtIndexPath: (NSIndexPath*) indexPath {
@@ -311,7 +311,10 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     // Get the desired contact from the filteredContacts array
-    THContact *contact = [self.filteredContacts objectAtIndex:indexPath.row];
+    THContact *contact;
+
+    if (self.filteredContacts.count > 0)
+        contact = [self.filteredContacts objectAtIndex:indexPath.row];
     
     // Initialize the table view cell
     NSString *cellIdentifier = @"ContactCell";
@@ -321,9 +324,9 @@
     }
 
     // Assign values to to US elements
-    cell.name.text = [contact fullName];
-    cell.phone.text = contact.phone;
-    cell.phoneLabel.text = contact.phoneLabel;
+    cell.name.text = contact ? [contact fullName] : @"Add New Number";
+    cell.phone.text = contact ? contact.phone : self.contactPickerView.textView.text;
+    cell.phoneLabel.text = contact ? contact.phoneLabel : @"phone";
 
     if(contact.image) {
         cell.avatar.image = contact.image;
@@ -375,7 +378,15 @@
     
     // This uses the custom cellView
     // Set the custom imageView
-    THContact *user = [self.filteredContacts objectAtIndex:indexPath.row];
+
+    THContact *user = [[THContact alloc] init];
+
+    if (self.filteredContacts.count > 0) {
+        user = [self.filteredContacts objectAtIndex:indexPath.row];
+    } else {
+        user.phone = self.contactPickerView.textView.text;
+        user.firstName = user.phone;
+    }
 
     UIImage *image;
     
@@ -405,8 +416,7 @@
     if(self.selectedContacts.count > 0) {
         self.barButton.enabled = TRUE;
     }
-    else
-    {
+    else {
         self.barButton.enabled = FALSE;
     }
     
