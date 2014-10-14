@@ -191,7 +191,7 @@
 		29A71BDA1644824F005286F1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Tristan Himmelman";
 			};
 			buildConfigurationList = 29A71BDD1644824F005286F1 /* Build configuration list for PBXProject "ContactPicker" */;
@@ -286,6 +286,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
