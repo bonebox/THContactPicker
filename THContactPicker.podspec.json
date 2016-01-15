@@ -1,6 +1,6 @@
 {
   "name": "THContactPicker",
-  "version": "1.1-allogy",
+  "version": "1.2-allogy",
   "summary": "Contact picker view controller",
   "homepage": "https://github.com/tristanhimmelman/THContactPicker",
   "license": "MIT",
@@ -9,7 +9,7 @@
   },
   "source": {
     "git": "https://github.com/bonebox/THContactPicker.git",
-    "tag": "1.1-allogy"
+    "tag": "1.2-allogy"
   },
   "platforms": {
     "ios": "6.0"
