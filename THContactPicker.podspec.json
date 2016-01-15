@@ -1,0 +1,22 @@
+{
+  "name": "THContactPicker",
+  "version": "1.1-allogy",
+  "summary": "Contact picker view controller",
+  "homepage": "https://github.com/tristanhimmelman/THContactPicker",
+  "license": "MIT",
+  "authors": {
+    "Tristan Himmelman": ""
+  },
+  "source": {
+    "git": "https://github.com/bonebox/THContactPicker.git",
+    "tag": "1.1-allogy"
+  },
+  "platforms": {
+    "ios": "6.0"
+  },
+  "requires_arc": true,
+  "source_files": "ContactPicker/*.{h,m}",
+  "exclude_files" : ["ContactPicker/AppDelegate.{h,m}", "ContactPicker/main.m"],
+  "frameworks": ["AddressBook", "AddressBookUI"],
+  "resources": ["ContactPicker/*.png", "ContactPicker/*.xib"]
+}
